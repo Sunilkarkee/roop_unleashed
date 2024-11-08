@@ -27,48 +27,36 @@ source ~/.bashrc
 
 # Download and install Miniconda
 echo "Downloading and installing Miniconda..."
-run_command "wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-run_command "bash Miniconda3-latest-Linux-x86_64.sh -u -b -p $HOME/miniconda"
+run_command "wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O $HOME/miniconda.sh"
+run_command "bash $HOME/miniconda.sh -u -b -p $HOME/miniconda"
 
-# Add conda to PATH
+# Add Conda to PATH
 echo "Adding Conda to PATH..."
-export PATH=$HOME/miniconda/bin:$PATH
+echo 'export PATH=$HOME/miniconda/bin:$PATH' >> ~/.bashrc
 
-# Initialize conda
+# Initialize Conda
 echo "Initializing Conda..."
-run_command "conda init"
+run_command "$HOME/miniconda/bin/conda init"
 
-# Restart the shell or source the bash configuration
-echo "Restarting the shell..."
+# Source the bashrc file to ensure conda is initialized properly
+echo "Applying changes to the shell..."
 source ~/.bashrc
 
-# Create Conda environment
-echo "Creating Conda environment..."
+# Create Conda environment 'roop' with Python 3.10 and cudatoolkit 11.8
+echo "Creating Conda environment 'roop'..."
 run_command "conda create -n roop python=3.10 cudatoolkit=11.8 -y"
 
-# Activate the Conda environment
-echo "Activating Conda environment..."
-run_command "conda activate roop"
+# Force activate Conda environment and run commands in it
+echo "Activating Conda environment and running commands..."
 
-# Clone the repository
-echo "Cloning the repository..."
-run_command "git clone https://github.com/C0untFloyd/roop-unleashed.git"
-cd roop-unleashed
+# Running commands within the 'roop' environment using bash -i
+bash -i -c "
+    conda activate roop && 
+    git clone https://github.com/C0untFloyd/roop-unleashed.git && 
+    cd roop-unleashed && 
+    sed -i '77s/share=roop.globals.CFG.server_share/share=True/' ui/main.py && 
+    sed -i '81s/gradio_interface.share = roop.globals.CFG.server_share/gradio_interface.share = True/' ui/main.py &&
+    pip install -r requirements.txt &&
+    python run.py
+"
 
-# Edit the main.py file
-echo "Editing the main.py file..."
-sed -i '77s/share=roop.globals.CFG.server_share/share=True/' ui/main.py
-sed -i '81s/gradio_interface.share = roop.globals.CFG.server_share/gradio_interface.share = True/' ui/main.py
-
-# Install the required Python dependencies
-echo "Installing required Python dependencies..."
-run_command "pip install -r requirements.txt"
-
-# Deactivate and reactivate Conda environment before running the application
-echo "Deactivating and reactivating Conda environment..."
-run_command "conda deactivate"
-run_command "conda activate roop"
-
-# Run the application
-echo "Running the application..."
-run_command "python run.py"
