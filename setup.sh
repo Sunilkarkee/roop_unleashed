@@ -13,11 +13,12 @@ run_command() {
 
 # Update and upgrade the system
 echo "Updating and upgrading the system..."
-run_command "sudo apt update && sudo apt upgrade -y"
+run_command "apt update"
+run_command "apt upgrade -y"
 
 # Install required packages (using base version of g++)
 echo "Installing required packages..."
-run_command "sudo apt install -y nano git build-essential g++ nvidia-cuda-toolkit ffmpeg"
+run_command "apt install -y nano git build-essential g++ nvidia-cuda-toolkit ffmpeg"
 
 # Add CUDA to PATH
 echo "Adding CUDA to PATH..."
