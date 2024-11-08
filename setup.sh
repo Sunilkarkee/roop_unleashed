@@ -28,15 +28,26 @@ source ~/.bashrc
 # Download and install Miniconda
 echo "Downloading and installing Miniconda..."
 run_command "wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-run_command "bash Miniconda3-latest-Linux-x86_64.sh -b -p $HOME/miniconda"
+run_command "bash Miniconda3-latest-Linux-x86_64.sh -u -b -p $HOME/miniconda"
 
 # Add conda to PATH
 echo "Adding Conda to PATH..."
 export PATH=$HOME/miniconda/bin:$PATH
 
+# Initialize conda
+echo "Initializing Conda..."
+run_command "conda init"
+
+# Restart the shell or source the bash configuration
+echo "Restarting the shell..."
+source ~/.bashrc
+
 # Create Conda environment
 echo "Creating Conda environment..."
 run_command "conda create -n roop python=3.10 cudatoolkit=11.8 -y"
+
+# Activate the Conda environment
+echo "Activating Conda environment..."
 run_command "conda activate roop"
 
 # Clone the repository
