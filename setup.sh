@@ -5,7 +5,7 @@ set -e
 
 # Function to run commands and check for errors
 run_command() {
-    local command=$1
+    local command="$1"
     echo "Running: $command"
     if ! eval "$command"; then
         echo "Error executing command: $command"
@@ -18,7 +18,7 @@ check_cuda() {
     if ! command -v nvidia-smi &> /dev/null; then
         echo "Error: NVIDIA driver not found. Please install NVIDIA drivers first."
         exit 1
-    }
+    fi
     echo "CUDA check passed. Found NVIDIA drivers:"
     nvidia-smi
 }
@@ -34,11 +34,11 @@ check_miniconda() {
 
 # Function to verify downloaded files
 verify_download() {
-    local file=$1
+    local file="$1"
     if [ ! -f "$file" ]; then
         echo "Error: Downloaded file $file not found"
         exit 1
-    }
+    fi
 }
 
 # Check CUDA first
@@ -94,6 +94,7 @@ fi
     source "$HOME/miniconda/etc/profile.d/conda.sh"
     conda activate roop || exit 1
     
+    # Clone repository
     git clone https://github.com/C0untFloyd/roop-unleashed.git || exit 1
     cd roop-unleashed || exit 1
     
@@ -113,3 +114,4 @@ if [ $? -ne 0 ]; then
     echo "Error: Failed to setup and run roop-unleashed"
     exit 1
 fi
+
